@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+
+  stream-platform-app:
+    image: stream-platform-app:latest
+    container_name: stream-platform-app
+    environment:
+      PORT: '8080'
+      MYSQL_HOST: 'mysql'
+      MYSQL_PORT: '3306'      
+      MYSQL_DB: 'streamplatformdb'
+      MYSQL_USER: 'admin'
+      MYSQL_PWD: '123456'
+      JWT_SECRET: 'EXAMPLESECRET'
+    ports:
+      - '8080:8080'
+    expose:
+      - '8080'
+    networks:
+      - stream-platform-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: 'streamplatformdb'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: '123456'
+      MYSQL_ROOT_PASSWORD: '654321'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    networks:
+      - stream-platform-network
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./scripts/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
+      - ./scripts/data.sql:/docker-entrypoint-initdb.d/2_data.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-p654321"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+networks:
+  stream-platform-network:
+
+volumes:
+  db_data:

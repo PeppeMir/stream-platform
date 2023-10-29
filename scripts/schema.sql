@@ -1,0 +1,44 @@
+CREATE DATABASE IF NOT EXISTS streamplatformdb;
+USE streamplatformdb;
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  Id INTEGER NOT NULL AUTO_INCREMENT,
+  Email VARCHAR(200) NOT NULL,
+  Password VARCHAR(200) NOT NULL,
+  Creation_Date_Time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (Id),
+  UNIQUE (Email)
+);
+
+DROP TABLE IF EXISTS movies;
+
+CREATE TABLE movies (
+  Id INTEGER NOT NULL AUTO_INCREMENT,
+  Title VARCHAR(50) NOT NULL,
+  Release_Date TIMESTAMP,
+  Genre VARCHAR(50),
+  Synopsis VARCHAR(5000),
+  CreateUser_Id INTEGER NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE (Title)
+);
+
+DROP TABLE IF EXISTS castmembers;
+
+CREATE TABLE castmembers (
+  Id INTEGER NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(50) NOT NULL,
+  Surname VARCHAR(50) NOT NULL,
+  Age INTEGER,
+  PRIMARY KEY (Id)
+);
+
+DROP TABLE IF EXISTS movies_castmembers;
+
+CREATE TABLE movies_castmembers (
+  Movie_Id INTEGER NOT NULL,
+  CastMember_Id INTEGER NOT NULL,
+  PRIMARY KEY (Movie_Id, CastMember_Id)
+);
